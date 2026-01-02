@@ -2,10 +2,10 @@
 # Infer to price
 
 import modal
-from agents import Agent
+from agents.agents import Agent
 
 
-class SpecialListAgent(Agent):
+class SpecialistAgent(Agent):
     """
     An Agent that runs the fine-tuned LLM that's running remotely on Modal
     """
