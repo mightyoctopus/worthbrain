@@ -18,7 +18,7 @@ class FrontierAgent(Agent):
     name = "Frontier Agent"
     color = Agent.BLUE
 
-    MODEL = "gpt-4o-mini"
+    MODEL = "gpt-5-mini"
 
     def __init__(self, collection):
         """
@@ -26,15 +26,9 @@ class FrontierAgent(Agent):
         And setting up the vector encoding model
         """
         self.log("Initializing Frontier Agent")
-        deepseek_api_key = os.getenv("DEEPSEEK_API_KEY")
-        if deepseek_api_key:
-            self.client = OpenAI(api_key=deepseek_api_key, base_url="https://api.deepseek.com")
-            self.MODEL = "deepseek-chat"
-            self.log("Frontier Agent is set up with DeepSeek")
-        else:
-            self.client = OpenAI()
-            self.MODEL = "gpt-4o-mini"
-            self.log("Frontier Agent is setting up with OpenAI")
+        self.client = OpenAI()
+        self.MODEL = FrontierAgent.MODEL
+        self.log("Frontier Agent is setting up with OpenAI")
         self.collection = collection
         self.model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
         self.log("Frontier Agent is ready")
@@ -102,8 +96,7 @@ class FrontierAgent(Agent):
         response = self.client.chat.completions.create(
             model=self.MODEL,
             messages=self.messages_for(description, documents, prices),
-            seed=42,
-            max_tokens=5
+            seed=42
         )
         reply = response.choices[0].message.content
         result = self.get_price(reply)

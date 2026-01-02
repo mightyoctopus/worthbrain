@@ -18,7 +18,6 @@ class EnsembleAgent(Agent):
         self.log("Initializing Ensemble Agent")
         self.specialist = SpecialistAgent()
         self.frontier = FrontierAgent(collection)
-        self.model = joblib.load('ensemble_model.pkl')
         self.log("Ensemble Agent is ready")
 
     def price(self, description: str) -> float:
@@ -32,13 +31,7 @@ class EnsembleAgent(Agent):
         self.log("Running Ensemble Agent - collaborating with specialist, frontier and random forest agents")
         specialist = self.specialist.price(description)
         frontier = self.frontier.price(description)
-
-        X = pd.DataFrame({
-            'Specialist': [specialist],
-            'Frontier': [frontier],
-            'Min': [min(specialist, frontier)],
-            'Max': [max(specialist, frontier)],
-        })
-        y = max(0, self.model.predict(X)[0])
-        self.log(f"Ensemble Agent complete - returning ${y:.2f}")
-        return y
+        
+        combined = frontier * 0.8 + specialist * 0.2
+        self.log(f"Ensemble Agent complete - returning ${combined:.2f}")
+        return round(combined, 2)
