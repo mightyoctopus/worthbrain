@@ -20,18 +20,27 @@ class EnsembleAgent(Agent):
         self.frontier = FrontierAgent(collection)
         self.log("Ensemble Agent is ready")
 
+
+
     def price(self, description: str) -> float:
         """
         Run this ensemble model
         Ask each of the models to price the product
         Then use the Linear Regression model to return the weighted price
+        
         :param description: the description of a product
         :return: an estimate of its price
         """
-        self.log("Running Ensemble Agent - collaborating with specialist, frontier and random forest agents")
-        specialist = self.specialist.price(description)
-        frontier = self.frontier.price(description)
         
-        combined = frontier * 0.8 + specialist * 0.2
+        self.log("Running Ensemble Agent - collaborating with specialist, frontier and random forest agents") 
+
+        desc_into_str = description.prompt.replace(
+            "How much does this cost to the nearest dollar?\n\n", ""
+        ).split("\n\nPrice is $")[0]
+        
+        specialist = self.specialist.price(desc_into_str)
+        frontier = self.frontier.price(desc_into_str)
+        
+        combined = frontier * 0.9 + specialist * 0.1
         self.log(f"Ensemble Agent complete - returning ${combined:.2f}")
         return round(combined, 2)

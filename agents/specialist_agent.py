@@ -21,6 +21,7 @@ class SpecialistAgent(Agent):
         Pricer = modal.Cls.from_name("pricer-service", "Pricer")
         self.pricer = Pricer()
         self.log("Specialist Agent is ready")
+        
 
     def price(self, description: str) -> float:
         """
