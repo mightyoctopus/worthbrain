@@ -17,17 +17,17 @@ class SpecialistAgent(Agent):
         """
         Set up this Agent by creating an instance of the modal class
         """
-        self.log("Specialist Agent is initializing -- connecting to Modal")
+        self.log("Specialist Agent is initializing -- connecting to Modal...")
         Pricer = modal.Cls.from_name("pricer-service", "Pricer")
         self.pricer = Pricer()
-        self.log("Specialist Agent is ready")
+        self.log("Specialist Agent is ready!")
         
 
     def price(self, description: str) -> float:
         """
         Make a remote call to return the estimate of the price of a given item description
         """
-        self.log("Specialist Agent is calling remote fine-tuned model")
+        self.log("Specialist Agent is calling remote fine-tuned model... If this is a cold start, this might take some time to wake it up")
         result = self.pricer.price.remote(description)
         self.log(f"Specialist Agent completed - predicting ${result:.2f}")
 

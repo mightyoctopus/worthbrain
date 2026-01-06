@@ -25,13 +25,13 @@ class FrontierAgent(Agent):
         Set up this instance by connecting to OpenAI or DeepSeek, to the Chroma Datastore,
         And setting up the vector encoding model
         """
-        self.log("Initializing Frontier Agent")
+        self.log("Initializing Frontier Agent...")
         self.client = OpenAI()
         self.MODEL = FrontierAgent.MODEL
         self.log("Frontier Agent is setting up with OpenAI")
         self.collection = collection
         self.model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
-        self.log("Frontier Agent is ready")
+        self.log("Frontier Agent is ready!")
 
     def make_context(self, similars: List[str], prices: List[float]) -> str:
         """
@@ -92,7 +92,7 @@ class FrontierAgent(Agent):
         :return: an estimate of the price
         """
         documents, prices = self.find_similars(description)
-        self.log(f"Frontier Agent is about to call {self.MODEL} with context including 5 similar products")
+        self.log(f"Frontier Agent is about to call {self.MODEL} with context including 5 similar products...")
         response = self.client.chat.completions.create(
             model=self.MODEL,
             messages=self.messages_for(description, documents, prices),
