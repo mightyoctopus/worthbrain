@@ -1,4 +1,6 @@
+import math
 import pandas as pd
+from PIL.ImageStat import Global
 from sklearn.linear_model import LinearRegression
 import joblib
 from agents.agents import Agent
@@ -23,57 +25,72 @@ class EnsembleAgent(Agent):
         self.log("Ensemble Agent is ready!")
 
 
-    def price(self, description: str) -> float:
+    ### Total Price Range Error for Each:
+    frontier_err, special_err, neural_err = (0, 0, 0)
+
+
+    def price(self, description: str, y_truth: float=None) -> float:
         """
         Run this ensemble model
         Ask each of the models to price the product
         Then use the Linear Regression model to return the weighted price
-        
+
         :param description: the description of a product
         :return: an estimate of its price
         """
-        
+
         self.log("Running Ensemble Agent - collaborating with specialist, frontier and neural network agents...")
 
-        desc_into_str = description.prompt.replace(
+        processed_desc = description.replace(
             "How much does this cost to the nearest dollar?\n\n", ""
         ).split("\n\nPrice is $")[0]
-        
-        specialist = self.specialist.price(desc_into_str)
-        frontier = self.frontier.price(desc_into_str)
-        neural_network = self.neural_network.price(desc_into_str)
 
-        ### Only include specialist and frontier model's results to get the average price in a more stable range
-        ### as neural network model often makes drastically far off price estimates.
+        specialist = self.specialist.price(processed_desc)
+        frontier = self.frontier.price(processed_desc)
+        neural_network = self.neural_network.price(processed_desc)
 
-        ### rough_price V1:
-        # rough_price = (specialist + frontier) / 2
+        ### rough_price options to determine which model contributes more to deciding the price range
+        ### Some rough_price eliminates certain models to remove the volatility and to keep more stable price range estimations
+        def estimate_price_range(option):
+            if option == "o1":
+                ### rough_price Option 1:
+                return (specialist + frontier) / 2
+            elif option == "o2":
+                ## rough_price Option 2:
+                return specialist * 0.2 + frontier * 0.8
+            else:
+                ## rough_price Option 3:
+                return frontier
 
-        ### rough_price V2:
-        # rough_price = specialist * 0.2 + frontier * 0.8
+        rough_price = estimate_price_range("o3")
 
         ### Apply a different pricing distribution depending on the estimated price range based on each model's best accuracy by range
         ### Experiment Logs: https://docs.google.com/document/d/1RqaQeTpferlkdPNkXn1aEnrSq9d5uQs7cSWBWDS7As8/edit?tab=t.0
-        # if rough_price < 50:
-        #     combined = frontier * 0.7 + specialist * 0.3
-        # elif rough_price < 100:
-        #     combined = frontier * 0.35 + specialist * 0.6 + neural_network * 0.05
-        # elif rough_price < 150:
-        #     combined = frontier * 0.9 + specialist * 0.08 + neural_network * 0.02
-        # elif rough_price < 200:
-        #     combined = frontier * 0.9 + specialist * 0.07 + neural_network * 0.03
-        # elif rough_price < 250:
-        #     combined = frontier * 0.7 + specialist * 0.3
-        # elif rough_price < 300:
-        #     combined = frontier * 0.6 + specialist * 0.3 + neural_network * 0.1
-        # elif rough_price < 350:
-        #     combined = frontier * 0.8 + specialist * 0.2
-        # elif rough_price < 400:
-        #     combined = frontier * 0.9 + specialist * 0.1
-        # else:
-        #     combined = frontier * 0.9 + specialist * 0.1
 
-        ###### Simplified version of pricing contribution here
+        ### Simplified version of allocating model dominance
+        if rough_price < 100:
+            combined = frontier * 0.7 + specialist * 0.3
+        elif rough_price < 200:
+            combined = frontier * 0.85 + specialist * 0.1 + neural_network * 0.05
+        elif rough_price < 300:
+            combined = frontier * 0.7 + specialist * 0.2 + neural_network * 0.1
+        else:
+            combined = frontier * 0.9 + specialist * 0.1
 
         self.log(f"Ensemble Agent complete - returning ${combined:.2f}")
+
+        ### This code below was placed for testing/experiment purposes. At inference, this below doesn't affect it.
+        if y_truth is not None:
+            f_err = abs(frontier - y_truth)
+            s_err = abs(specialist - y_truth)
+            n_err = abs(neural_network - y_truth)
+
+            EnsembleAgent.frontier_err += f_err
+            EnsembleAgent.special_err += s_err
+            EnsembleAgent.neural_err += n_err
+
+            self.log(f"Frontier Err: {EnsembleAgent.frontier_err:,.2f}")
+            self.log(f"Special Err: {EnsembleAgent.special_err:,.2f}")
+            self.log(f"Neural Err: {EnsembleAgent.neural_err:,.2f}")
+
         return round(combined, 2)

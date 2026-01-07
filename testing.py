@@ -31,7 +31,7 @@ class Tester:
 
     def run_datapoint(self, i):
         datapoint = self.data[i]
-        guess = self.predictor(datapoint)
+        guess = self.predictor(datapoint.prompt, datapoint.price)
         truth = datapoint.price
         error = abs(guess - truth)
         log_error = math.log(truth + 1) - math.log(guess + 1)
