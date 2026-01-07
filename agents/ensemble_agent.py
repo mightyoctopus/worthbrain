@@ -35,7 +35,9 @@ class EnsembleAgent(Agent):
         Ask each of the models to price the product
         Then use the Linear Regression model to return the weighted price
 
-        :param description: the description of a product
+        :param
+            description: the description of a product
+            y_truth: the ground truth value(price) of a tested item
         :return: an estimate of its price
         """
 
@@ -79,7 +81,8 @@ class EnsembleAgent(Agent):
 
         self.log(f"Ensemble Agent complete - returning ${combined:.2f}")
 
-        ### This code below was placed for testing/experiment purposes. At inference, this below doesn't affect it.
+        ### This code below was made to check absolute error ranges for each model for testing/experiment purposes.
+        ### At inference, this below doesn't affect it.
         if y_truth is not None:
             f_err = abs(frontier - y_truth)
             s_err = abs(specialist - y_truth)
