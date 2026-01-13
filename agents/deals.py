@@ -6,6 +6,11 @@ import feedparser
 from tqdm import tqdm
 import requests
 import time
+import ssl
+
+### Add ssl to prevent the ssl issue for feedparser accessing.
+if hasattr(ssl, '_create_unverified_context'):
+    ssl._create_default_https_context = ssl._create_unverified_context
 
 feeds = [
     "https://www.dealnews.com/c142/Electronics/?rss=1",
@@ -81,28 +86,27 @@ class ScrapedDeal:
         """
         Return a longer string to describe this deal for use in calling a model
         """
-        return f"Title: {self.title}\nDetails: {self.details.strip()}\nFeatures: {self.features.strip()}\nURL: {self.url}"
+        return f"Title: {self.title}\n\nDetails: {self.details.strip()}\n\nFeatures: {self.features.strip()}\n\nURL: {self.url}"
 
     @classmethod
     def fetch(cls, show_progress: bool = False):
         """
         Retrieve all deals from the selected RSS feeds
         """
-
         deals = []
         feed_iter = tqdm(feeds) if show_progress else feeds
         for feed_url in feed_iter:
-            feed = feedparser.parse(feed_url)
+            feed = feedparser.parse(
+                feed_url,
+                request_headers={
+                    "User-Agent": "Mozilla/5.0 (compatible; DealFetcher/1.0)",
+                }
+            )
             for entry in feed["entries"][:10]:
                 deals.append(cls(entry))
                 time.sleep(0.5)
 
         return deals
-
-
-
-
-
 
 
 
