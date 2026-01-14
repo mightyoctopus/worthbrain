@@ -2,7 +2,6 @@ from typing import Optional, List
 from openai import OpenAI
 from agents.deals import ScrapedDeal, DealSelection, Opportunity
 from agents.agents import Agent
-from day3 import make_user_prompt
 
 
 class ScannerAgent(Agent):
