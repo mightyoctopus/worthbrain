@@ -33,7 +33,7 @@ class MessagingAgent(Agent):
         "user": self.pushover_user,
         "token": self.pushover_token,
         "message": text,
-        "sound": "cashregister"
+        "sound": "magic"
         }
 
         if not payload["user"] or not payload["token"]:
