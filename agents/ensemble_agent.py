@@ -53,16 +53,17 @@ class EnsembleAgent(Agent):
 
         ### rough_price options to determine which model contributes more to deciding the price range
         ### Some rough_price eliminates certain models to remove the volatility and to keep more stable price range estimations
-        def estimate_price_range(option):
-            if option == "o1":
+        def estimate_price_range(contribution_option):
+            if contribution_option == "o1":
                 ### rough_price Option 1:
                 return (specialist + frontier) / 2
-            elif option == "o2":
+            elif contribution_option == "o2":
                 ## rough_price Option 2:
                 return specialist * 0.2 + frontier * 0.8
-            else:
-                ## rough_price Option 3:
+            elif contribution_option == "o3":
+                ## rough_price Option 3 ("o3"):
                 return frontier
+            return None
 
         rough_price = estimate_price_range("o3")
 
