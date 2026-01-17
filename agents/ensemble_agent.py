@@ -7,6 +7,7 @@ from agents.agents import Agent
 from agents.specialist_agent import SpecialistAgent
 from agents.frontier_agent import FrontierAgent
 from agents.neural_network_agent import NeuralNetworkAgent
+from typing import Optional
 
 
 class EnsembleAgent(Agent):
@@ -24,6 +25,31 @@ class EnsembleAgent(Agent):
         self.neural_network = NeuralNetworkAgent()
         self.log("Ensemble Agent is ready!")
 
+    def estimate_price_range(
+            self,
+            frontier: float,
+            specialist: float,
+            contribution_option: str ="o3"
+    ):
+        """
+        Provide rough_price options that can be selectable to determine which model contributes more to deciding the price range.
+        Some rough_price eliminates certain models to remove the volatility and to keep more stable price range estimations
+        :param frontier: The outcome of price range estimate by the frontier model(GPT 5-mini)
+        :param specialist: The outcome of price range estimate by the fine-tuned LLaMA 3.1 8b model
+        :param contribution_option: (Optional) Determines the combination of price models dominance for estimating the rough price range
+        """
+        if contribution_option == "o1":
+            ### rough_price Option 1:
+            return (specialist + frontier) / 2
+        elif contribution_option == "o2":
+            ## rough_price Option 2:
+            return specialist * 0.2 + frontier * 0.8
+        elif contribution_option == "o3":
+            ## rough_price Option 3 ("o3"):
+            return frontier
+        else:
+            raise ValueError(f"Unknown contribution_option: {contribution_option}")
+
 
     ### Total Price Range Error for Each:
     frontier_err, special_err, neural_err = (0, 0, 0)
@@ -37,7 +63,7 @@ class EnsembleAgent(Agent):
 
         :param
             description: the description of a product
-            y_truth: the ground truth value(price) of a tested item
+            y_truth: the ground truth value(price) of a tested item, used for performance benchmark
         :return: an estimate of its price
         """
 
@@ -51,21 +77,7 @@ class EnsembleAgent(Agent):
         frontier = self.frontier.price(processed_desc)
         neural_network = self.neural_network.price(processed_desc)
 
-        ### rough_price options to determine which model contributes more to deciding the price range
-        ### Some rough_price eliminates certain models to remove the volatility and to keep more stable price range estimations
-        def estimate_price_range(contribution_option):
-            if contribution_option == "o1":
-                ### rough_price Option 1:
-                return (specialist + frontier) / 2
-            elif contribution_option == "o2":
-                ## rough_price Option 2:
-                return specialist * 0.2 + frontier * 0.8
-            elif contribution_option == "o3":
-                ## rough_price Option 3 ("o3"):
-                return frontier
-            return None
-
-        rough_price = estimate_price_range("o3")
+        rough_price = self.estimate_price_range(frontier, specialist, "o3")
 
         ### Apply a different pricing distribution depending on the estimated price range based on each model's best accuracy by range
         ### Experiment Logs: https://docs.google.com/document/d/1RqaQeTpferlkdPNkXn1aEnrSq9d5uQs7cSWBWDS7As8/edit?tab=t.0
