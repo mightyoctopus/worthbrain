@@ -18,6 +18,10 @@ class EnsembleAgent(Agent):
         """
         Create an instance of Ensemble, by creating each of the models
         And loading the weights of the Ensemble
+
+        :param collection:
+            A vector database collection used by the FrontierAgent for
+            semantic retrieval and similarity search.
         """
         self.log("Initializing Ensemble Agent...")
         self.specialist = SpecialistAgent()
@@ -34,6 +38,7 @@ class EnsembleAgent(Agent):
         """
         Provide rough_price options that can be selectable to determine which model contributes more to deciding the price range.
         Some rough_price eliminates certain models to remove the volatility and to keep more stable price range estimations
+
         :param frontier: The outcome of price range estimate by the frontier model(GPT 5-mini)
         :param specialist: The outcome of price range estimate by the fine-tuned LLaMA 3.1 8b model
         :param contribution_option: (Optional) Determines the combination of price models dominance for estimating the rough price range
