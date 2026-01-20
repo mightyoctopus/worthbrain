@@ -154,8 +154,12 @@ class AutonomousPlanningAgent(Agent):
 
         for tool_call in message.tool_calls:
             tool_name = tool_call.function.name
-            arguments: dict = tool_call.function.arguments
+            # Convert the JSON string into dict
+            arguments: dict = json.loads(tool_call.function.arguments)
             tool = mapping.get(tool_name)
+
+            if not tool:
+                raise ValueError(f"Unknown tool called: {tool_name}")
 
             result = tool(**arguments) if tool else None
             results.append(
