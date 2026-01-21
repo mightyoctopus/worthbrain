@@ -100,7 +100,7 @@ class EnsembleAgent(Agent):
         self.log(f"Ensemble Agent complete - returning ${combined:.2f}")
 
         ### This code below was made to check absolute error ranges for each model for testing/experiment purposes.
-        ### At inference, this below doesn't affect it.
+        ### At inference, this below doesn't affect the run.
         if y_truth is not None:
             f_err = abs(frontier - y_truth)
             s_err = abs(specialist - y_truth)
