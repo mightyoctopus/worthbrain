@@ -10,6 +10,7 @@ from agents.scanner_agent import ScannerAgent
 from agents.ensemble_agent import EnsembleAgent
 from agents.messaging_agent import MessagingAgent
 
+### LLM-driven, tool-calling orchestrator (agentic)
 
 class AutonomousPlanningAgent(Agent):
     name = "Autonomous Planning Agent"
