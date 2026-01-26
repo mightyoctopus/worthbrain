@@ -29,10 +29,10 @@ class DeterministicPlanningAgent(Agent):
         :param deal: the deal, summarized from an RSS scrape
         :return: an Opportunity pydantic model, containing the estimated value and discount
         """
-        self.log(f"{self.name} is running to find a potential opportunity...")
+        self.log(f"{self.name} is estimating how much the deal is worth...")
         estimate: float = self.ensemble.price(deal.product_description)
         discount = estimate - deal.price
-        self.log(f"{self.name} has processed a deal with discount ${discount:,.2f}")
+        self.log(f"{self.name} has processed a deal with discount ${discount:,.2f}!")
         return Opportunity(deal=deal, estimate=estimate, discount=discount)
 
 
