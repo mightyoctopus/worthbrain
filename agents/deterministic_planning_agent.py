@@ -25,9 +25,9 @@ class DeterministicPlanningAgent(Agent):
 
     def run(self, deal: Deal) -> Opportunity:
         """
-        Run the workflow for a particular deal
+        Run the workflow for a particular deal and convert it into Opportunity object
         :param deal: the deal, summarized from an RSS scrape
-        :return: an Opportunity pydantic object
+        :return: an Opportunity pydantic model, containing the estimated value and discount
         """
         self.log(f"{self.name} is running to find a potential opportunity...")
         estimate: float = self.ensemble.price(deal.product_description)
