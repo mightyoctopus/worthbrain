@@ -76,12 +76,17 @@ class DealAgentFramework:
             return result
         return []
 
-    def write_memory(self):
-        # Write opportunity into the memory.json file (self.memory)
+    def write_memory(self) -> None:
+        """
+        Write opportunities into the memory.json file
+        """
         if self.memory:
             data: List[dict] = [opp.model_dump() for opp in self.memory]
             with open(self.MEMORY_FILENAME, "w") as f:
                 json.dump(data, f, indent=2)
+
+
+
 
     def log(self, message: str):
         text = BG_BLUE + WHITE + "[Agent Framework] " + message + RESET
