@@ -53,7 +53,7 @@ class DealAgentFramework:
     def __init__(self):
         init_logging()
         client = chromadb.PersistentClient(self.DB)
-        self.memory = ... ### read_memory() method here later
+        self.memory = self.read_memory()
         self.collection = client.get_or_create_collection("products")
         self.planner = None # Deterministic Agent assigned here later
 
@@ -62,6 +62,19 @@ class DealAgentFramework:
             self.log("Initializing Agent Framework...")
             self.planner = DeterministicPlanningAgent(self.collection)
             self.log("Agent Framework is ready!")
+
+    def read_memory(self) -> List[Opportunity]:
+        """
+        Read the memory.json file and convert it into Opportunity pydantic model
+        :return: A list of Opportunity models, or an empty list if no memory file is found.
+        """
+
+        if os.path.exists(self.MEMORY_FILENAME):
+            with open(self.MEMORY_FILENAME, "r") as f:
+                data: List[dict] = json.load(f)
+                result = [Opportunity(**opp) for opp in data]
+            return result
+        return []
 
     def log(self, message: str):
         text = BG_BLUE + WHITE + "[Agent Framework] " + message + RESET
@@ -73,6 +86,9 @@ class DealAgentFramework:
 
 
 
+############ TEST ############
+# agent = DealAgentFramework()
+# print(agent.read_memory())
 
 
 
