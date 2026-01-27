@@ -85,6 +85,20 @@ class DealAgentFramework:
             with open(self.MEMORY_FILENAME, "w") as f:
                 json.dump(data, f, indent=2)
 
+    @classmethod
+    def reset_memory(cls) -> None:
+        """
+        Reset data in the memory.json file back to the default state
+        """
+        data = []
+
+        if os.path.exists(cls.MEMORY_FILENAME):
+            with open(cls.MEMORY_FILENAME, "r") as f:
+                data = json.load(f)
+        truncated = data[:2]
+
+        with open(cls.MEMORY_FILENAME, "w") as f:
+            json.dump(truncated, f, indent=2)
 
 
 
@@ -100,6 +114,6 @@ class DealAgentFramework:
 
 ############ TEST ############
 # agent = DealAgentFramework()
-# print(agent.read_memory())
+# print(agent.reset_memory())
 
 
