@@ -53,7 +53,7 @@ class DealAgentFramework:
     def __init__(self):
         init_logging()
         client = chromadb.PersistentClient(self.DB)
-        self.memory = self.read_memory()
+        self.memory: List[Opportunity] = self.read_memory()
         self.collection = client.get_or_create_collection("products")
         self.planner = None # Deterministic Agent assigned here later
 
@@ -76,6 +76,13 @@ class DealAgentFramework:
             return result
         return []
 
+    def write_memory(self):
+        # Write opportunity into the memory.json file (self.memory)
+        if self.memory:
+            data: List[dict] = [opp.model_dump() for opp in self.memory]
+            with open(self.MEMORY_FILENAME, "w") as f:
+                json.dump(data, f, indent=2)
+
     def log(self, message: str):
         text = BG_BLUE + WHITE + "[Agent Framework] " + message + RESET
         logging.info(text)
@@ -89,7 +96,5 @@ class DealAgentFramework:
 ############ TEST ############
 # agent = DealAgentFramework()
 # print(agent.read_memory())
-
-
 
 
