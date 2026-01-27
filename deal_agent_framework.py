@@ -47,7 +47,25 @@ def init_logging():
 
 
 class DealAgentFramework:
+    DB = "products_vectorstore"
+    MEMORY_FILENAME = "memory.json"
 
+    def __init__(self):
+        init_logging()
+        client = chromadb.PersistentClient(self.DB)
+        self.memory = ... ### read_memory() method here later
+        self.collection = client.get_or_create_collection("products")
+        self.planner = None # Deterministic Agent assigned here later
+
+    def init_agent_as_needed(self):
+        if not self.planner:
+            self.log("Initializing Agent Framework...")
+            self.planner = DeterministicPlanningAgent(self.collection)
+            self.log("Agent Framework is ready!")
+
+    def log(self, message: str):
+        text = BG_BLUE + WHITE + "[Agent Framework] " + message + RESET
+        logging.info(text)
 
 
 
