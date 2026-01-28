@@ -2,6 +2,7 @@ import os
 import sys
 import logging
 import json
+from importlib.metadata import metadata
 from typing import List, Optional
 from dotenv import load_dotenv
 import chromadb
@@ -137,6 +138,21 @@ class DealAgentFramework:
 
     @classmethod
     def get_plot_data(cls, max_datapoints=2000):
+        client = chromadb.PersistentClient(path=cls.DB)
+        collection = client.get_or_create_collection("products")
+
+        result = collection.get(
+            include=["embeddings", "documents", "metadatas"], limit=max_datapoints
+        )
+        vectors = np.array(result["embeddings"])
+        documents = result["documents"]
+        categories = [metadata["category"] for metadata in result["metadatas"]]
+        colors = [COLORS[CATEGORIES.index(c)] for c in categories]
+
+        tsne = TSNE(n_components=3, random_state=42, n_jobs=1)
+        reduced_vectors = tsne.fit_transform(vectors)
+
+        return documents, reduced_vectors, colors
         pass
 
 
