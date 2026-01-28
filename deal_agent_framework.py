@@ -132,7 +132,8 @@ class DealAgentFramework:
 
 
 
-
+if __name__ == "__main__":
+    DealAgentFramework().run()
 
 
 
