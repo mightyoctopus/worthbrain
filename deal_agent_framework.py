@@ -20,16 +20,22 @@ RESET = "\033[0m"
 
 # Colors for plot
 CATEGORIES = [
-    "Appliances",
-    "Automotive",
-    "Cell_Phones_and_Accessories",
-    "Electronics",
-    "Musical_Instruments",
-    "Office_Products",
-    "Tools_and_Home_Improvement",
-    "Toys_and_Games",
+    'Appliances',
+    'Automotive',
+    'Cell_Phones_and_Accessories',
+    'Electronics','Musical_Instruments',
+    'Office_Products',
+    'Tools_and_Home_Improvement',
+    'Toys_and_Games',
+    "Industrial_and_Scientific",
+    "Arts_Crafts_and_Sewing",
+    "Handmade_Products",
+    "All_Beauty",
+    "Gift_Cards"
 ]
-COLORS = ["red", "blue", "brown", "orange", "yellow", "green", "purple", "cyan"]
+
+COLORS = ['red', 'blue', 'brown', 'orange', 'yellow', 'green' , 'purple', 'cyan', "purple", "black", "gray", "pink", "olive"]
+
 
 
 def init_logging():
@@ -129,6 +135,9 @@ class DealAgentFramework:
         return self.memory
 
 
+    @classmethod
+    def get_plot_data(cls, max_datapoints=2000):
+        pass
 
 
 
