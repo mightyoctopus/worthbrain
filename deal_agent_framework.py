@@ -2,7 +2,7 @@ import os
 import sys
 import logging
 import json
-from typing import List
+from typing import List, Optional
 from dotenv import load_dotenv
 import chromadb
 from sklearn.manifold import TSNE
@@ -100,11 +100,40 @@ class DealAgentFramework:
         with open(cls.MEMORY_FILENAME, "w") as f:
             json.dump(truncated, f, indent=2)
 
-
-
     def log(self, message: str):
         text = BG_BLUE + WHITE + "[Agent Framework] " + message + RESET
         logging.info(text)
+
+    def run(self) -> List[Opportunity]:
+        """
+        Initialize and start to run the planner agent that manages the entire agentic workflow
+
+        Process:
+        1. Init the planner agent
+        2. Fetch result (Opportunity pydantic model -- single Opportunity model with the best deal picked out)
+        3. If result is fetched successfully, append it to the memory and write it into memory.json
+        4. Return the Opportunity models
+
+        :return: A list of Opportunity models
+        """
+        self.log("Deal Agent Framework is initializing Planning Agent...")
+        if not self.planner:
+            self.init_agent_as_needed()
+
+        result = self.planner.plan(memory=self.memory)
+        self.log(f"Planning Agent has completed and returned {result}")
+        if result:
+            self.memory.append(result)
+            self.write_memory()
+
+        return self.memory
+
+
+
+
+
+
+
 
 
 
