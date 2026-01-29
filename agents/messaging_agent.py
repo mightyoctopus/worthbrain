@@ -54,7 +54,7 @@ class MessagingAgent(Agent):
         text += opportunity.deal.product_description[:10] + "..."
         text += opportunity.deal.url
         self.push(text)
-        self.log("Messaging Agent has completed!")
+        self.log("Messaging Agent has completed sending a push notification!")
 
 
     def craft_message(
