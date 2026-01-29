@@ -153,8 +153,6 @@ class DealAgentFramework:
         reduced_vectors = tsne.fit_transform(vectors)
 
         return documents, reduced_vectors, colors
-        pass
-
 
 
 if __name__ == "__main__":
