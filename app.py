@@ -58,7 +58,11 @@ class App:
         return self.agent_framework
 
     def run(self):
-        with gr.Blocks(title="WorthBrain", fill_width=True) as ui:
+        with gr.Blocks(
+                title="WorthBrain",
+                fill_width=True,
+                css="footer {visibility: hidden}"
+        ) as ui:
             log_data = gr.State([])
 
             def table_for(opps):
@@ -165,6 +169,21 @@ class App:
                 ### set outputs
                 outputs=[log_data, logs, opportunities_dataframe]
             )
+
+            ### Footer
+            with gr.Row():
+                gr.Markdown(
+                    """
+                    <div style="
+                        text-align: center;
+                        font-size: 13px;
+                        color: #888;
+                        padding: 15px 0;
+                    ">
+                    © 2026 WorthBrain · Autonomous Deal Hunting Intelligence
+                    </div>
+                    """
+                )
 
         ui.launch(inbrowser=True)
 
