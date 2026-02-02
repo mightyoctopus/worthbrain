@@ -154,8 +154,8 @@ class App:
             with gr.Row():
                 with gr.Column(scale=1):
                     logs = gr.HTML()
-                with gr.Column(scale=1):
-                    plot = gr.Plot(value="PLACEHOLDER HERE", show_label=False)
+                # with gr.Column(scale=1):
+                #     plot = gr.Plot(value="PLACEHOLDER HERE", show_label=False)
 
             ui.load(
                 ### connect a load event handler
@@ -165,6 +165,9 @@ class App:
                 ### set outputs
                 outputs=[log_data, logs, opportunities_dataframe]
             )
+
+        ui.launch(inbrowser=True)
+
 
 if __name__ == "__main__":
     App().run()
