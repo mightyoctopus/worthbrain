@@ -46,6 +46,7 @@ def setup_logging(log_queue):
 
 
 class App:
+
     def __init__(self):
         ### lazy initialization
         self.agent_framework = None
@@ -160,5 +161,7 @@ class App:
                 ### connect a load event handler
                 run_with_logging,
                 ### set inputs
+                inputs=[log_data],
                 ### set outputs
+                outputs=[log_data, logs, opportunities_dataframe]
             )
