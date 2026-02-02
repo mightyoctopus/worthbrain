@@ -5,13 +5,35 @@ import time
 import gradio as gr
 import plotly.graph_objects as go
 from dotenv import load_dotenv
+from typing import Tuple
 
-from day5 import opportunities_dataframe
 ### Internal classes
 from deal_agent_framework import DealAgentFramework
 from log_utils import reformat
 
 load_dotenv(override=True)
+
+class QueueHandler(logging.Handler):
+    def __init__(self, log_queue):
+        super().__init__()
+        self.log_queue = log_queue
+
+    def emit(self, record):
+        self.log_queue.put(self.format(record))
+
+def setup_logging(log_queue):
+    """
+    Configuration for logging
+    """
+    handler = QueueHandler(log_queue)
+    formatter = logging.Formatter(
+        "[%(asctime)s] %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S %z",
+    )
+    handler.setFormatter(formatter)
+    logger = logging.getLogger()
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
 
 
 class App:
@@ -28,6 +50,29 @@ class App:
     def run(self):
         with gr.Blocks(title="WorthBrain", fill_width=True) as ui:
             log_data = gr.State([])
+
+            def run_with_logging():
+                """
+                Load event handler that starts a background worker thread, streaming log updates
+                to the UI and yields incremental UI updates.
+                :yield:
+                    Tuple containing:
+                    - log_data (persistent log state)
+                    - output (HTML-formatted log message)
+                    - final_result (table data for opportunities)
+                """
+                log_queue = queue.Queue()
+                result_queue = queue.Queue()
+                setup_logging(log_queue)
+
+                def worker():
+                    """
+                    Execute agent framework in the background for fetching data
+                    """
+                    pass
+
+                thread = threading.Thread(target=worker)
+                thread.start()
 
             with gr.Row():
                 gr.Markdown(
@@ -54,6 +99,7 @@ class App:
 
             ui.load(
                 ### connect a load event handler
+                run_with_logging,
                 ### set inputs
                 ### set outputs
             )
