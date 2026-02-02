@@ -102,6 +102,42 @@ class App:
                                 break
                             time.sleep(0.1)
 
+            def get_plot():
+                """
+                Create 3D scatter plot for the result data
+                """
+                documents, vectors, colors = DealAgentFramework.get_plot_data(max_datapoints=800)
+
+                fig = go.Figure(
+                    data=[
+                        go.Scatter3d(
+                            x=vectors[:, 0],
+                            y=vectors[:, 1],
+                            z=vectors[:, 2],
+                            mode="markers",
+                            marker=dict(size=2, color=colors, opacity=0.7),
+                        )
+                    ]
+                )
+
+                fig.update_layout(
+                    scene=dict(
+                        xaxis_title="x",
+                        yaxis_title="y",
+                        zaxis_title="z",
+                        aspectmode="manual",
+                        aspectratio=dict(x=2.2, y=2.2, z=1),  # Make x-axis twice as long
+                        camera=dict(
+                            eye=dict(x=1.6, y=1.6, z=0.8)  # Adjust camera position
+                        ),
+                    ),
+                    height=400,
+                    margin=dict(r=5, b=1, l=5, t=2),
+                )
+
+                return fig
+
+
             def do_run():
                 new_opportunities = self.get_agent_framework().run()
                 table = table_for(new_opportunities)
@@ -158,8 +194,8 @@ class App:
             with gr.Row():
                 with gr.Column(scale=1):
                     logs = gr.HTML()
-                # with gr.Column(scale=1):
-                #     plot = gr.Plot(value="PLACEHOLDER HERE", show_label=False)
+                with gr.Column(scale=1):
+                    plot = gr.Plot(value=get_plot(), show_label=False)
 
             ### Footer
             with gr.Row():
