@@ -165,3 +165,6 @@ class App:
                 ### set outputs
                 outputs=[log_data, logs, opportunities_dataframe]
             )
+
+if __name__ == "__main__":
+    App().run()
