@@ -21,9 +21,18 @@ class QueueHandler(logging.Handler):
     def emit(self, record):
         self.log_queue.put(self.format(record))
 
+
+def html_for(log_data):
+    output = "<br>".join(log_data[-18:])
+    return f"""
+    <div id="scrollContent" style="height: 400px; overflow-y: auto; border: 1px solid #ccc; background-color: #222229; padding: 10px;">
+    {output}
+    </div>
+    """
+
 def setup_logging(log_queue):
     """
-    Configuration for logging
+    Register and configure for logging
     """
     handler = QueueHandler(log_queue)
     formatter = logging.Formatter(
@@ -51,7 +60,49 @@ class App:
         with gr.Blocks(title="WorthBrain", fill_width=True) as ui:
             log_data = gr.State([])
 
-            def run_with_logging():
+            def table_for(opps):
+                """
+                Format the initial/final_result
+                """
+                return [
+                    [
+                        opp.deal.product_description,
+                        f"${opp.deal.price:.2f}",
+                        f"${opp.estimate:.2f}",
+                        f"${opp.discount:.2f}",
+                        opp.deal.url,
+                    ]
+                    for opp in opps
+                ]
+
+            def stream_ui_updates(log_data, log_queue, result_queue):
+                """
+                A generator loop that streams log messages and opportunities data for the data frame in the UI
+                """
+
+                initial_result = table_for(self.get_agent_framework().memory)
+                final_result = None
+
+                while True:
+                    try:
+                        message = log_queue.get_nowait()
+                        log_data.append(reformat(message))
+                        yield log_data, html_for(log_data), final_result or initial_result
+                    except queue.Empty:
+                        try:
+                            final_result = result_queue.get_nowait()
+                            yield log_data, html_for(log_data), final_result or initial_result
+                        except queue.Empty:
+                            if final_result is not None:
+                                break
+                            time.sleep(0.1)
+
+            def do_run():
+                new_opportunities = self.get_agent_framework().run()
+                table = table_for(new_opportunities)
+                return table
+
+            def run_with_logging(initial_log_data):
                 """
                 Load event handler that starts a background worker thread, streaming log updates
                 to the UI and yields incremental UI updates.
@@ -67,12 +118,20 @@ class App:
 
                 def worker():
                     """
-                    Execute agent framework in the background for fetching data
+                    Background task that executes the agent framework,
+                    sends final results to result_queue, and emits logs
+                    through the logging system.
                     """
-                    pass
+                    result = do_run()
+                    result_queue.put(result)
 
-                thread = threading.Thread(target=worker)
+                thread = threading.Thread(target=worker, daemon=True)
                 thread.start()
+
+                for log_data, html_output, final_result in stream_ui_updates(
+                    initial_log_data, log_queue, result_queue
+                    ):
+                    yield log_data, html_output, final_result
 
             with gr.Row():
                 gr.Markdown(
