@@ -161,15 +161,6 @@ class App:
                 # with gr.Column(scale=1):
                 #     plot = gr.Plot(value="PLACEHOLDER HERE", show_label=False)
 
-            ui.load(
-                ### connect a load event handler
-                run_with_logging,
-                ### set inputs
-                inputs=[log_data],
-                ### set outputs
-                outputs=[log_data, logs, opportunities_dataframe]
-            )
-
             ### Footer
             with gr.Row():
                 gr.Markdown(
@@ -184,6 +175,15 @@ class App:
                     </div>
                     """
                 )
+
+            ui.load(
+                ### connect a load event handler
+                run_with_logging,
+                ### set inputs
+                inputs=[log_data],
+                ### set outputs
+                outputs=[log_data, logs, opportunities_dataframe]
+            )
 
         ui.launch(inbrowser=True)
 
