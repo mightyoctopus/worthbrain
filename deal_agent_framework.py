@@ -62,7 +62,7 @@ class DealAgentFramework:
         client = chromadb.PersistentClient(self.DB)
         self.memory: List[Opportunity] = self.read_memory()
         self.collection = client.get_or_create_collection("products")
-        self.planner = None # Deterministic Agent assigned here later
+        self.planner = None # lazy initialization
 
     def init_agent_as_needed(self):
         if not self.planner:
@@ -127,7 +127,7 @@ class DealAgentFramework:
         if not self.planner:
             self.init_agent_as_needed()
 
-        result = self.planner.plan(memory=self.memory)
+        result: Opportunity = self.planner.plan(memory=self.memory)
         self.log(f"Planning Agent has completed and returned {result}")
         if result:
             self.memory.append(result)
