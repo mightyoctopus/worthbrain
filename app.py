@@ -34,13 +34,20 @@ def setup_logging(log_queue):
     """
     Register and configure for logging
     """
+    logger = logging.getLogger()
+
+    ### Remove previous QueueHandlers to avoid duplication and UI floods (handler duplication)
+    for h in list(logger.handlers):
+        if isinstance(h, QueueHandler):
+            logger.removeHandler(h)
+
     handler = QueueHandler(log_queue)
     formatter = logging.Formatter(
         "[%(asctime)s] %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S %z",
     )
     handler.setFormatter(formatter)
-    logger = logging.getLogger()
+
     logger.addHandler(handler)
     logger.setLevel(logging.INFO)
 
@@ -50,6 +57,8 @@ class App:
     def __init__(self):
         ### lazy initialization
         self.agent_framework = None
+
+
     ### And assign it here
     def get_agent_framework(self):
         if not self.agent_framework:
