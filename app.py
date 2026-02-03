@@ -57,6 +57,7 @@ class App:
     def __init__(self):
         ### lazy initialization
         self.agent_framework = None
+        self.timer_enabled = False
 
 
     ### And assign it here
@@ -185,11 +186,20 @@ class App:
 
             with gr.Row():
                 gr.Markdown(
-                    '<div style="text-align: center;font-size:24px"><strong>WorthBrain</strong> - Autonomous Agent Framework that hunts for deals</div>'
+                    '<div style="text-align: center;font-size:26px"><strong>WorthBrain</strong> - Autonomous Agent Framework that hunts for deals</div>'
                 )
             with gr.Row():
                 gr.Markdown(
-                    '<div style="text-align: center;font-size:14px">A proprietary fine-tuned LLM deployed on Modal and a RAG pipeline with a frontier model collaborate to send push notifications with great online deals.</div>'
+                    '<div style="text-align: center;font-size:15px">A proprietary fine-tuned LLM deployed on Modal and a RAG pipeline with a frontier model collaborate to send push notifications with great online deals.</div>'
+                )
+            with gr.Row():
+                gr.Markdown(
+                    """
+                    <div style="text-align: center;font-size:15px">
+                        The Autonomous Team of Agents Automatically Finds a Deal 
+                        <span style="color: #00bfff; font-weight:600;">Every 10 Minutes!</span>
+                    </div>
+                    """
                 )
             with gr.Row():
                 opportunities_dataframe = gr.Dataframe(
@@ -200,6 +210,7 @@ class App:
                     column_count=5,
                     max_height=400,
                 )
+
             with gr.Row():
                 with gr.Column(scale=1):
                     logs = gr.HTML()
@@ -228,6 +239,14 @@ class App:
                 inputs=[log_data],
                 ### set outputs
                 outputs=[log_data, logs, opportunities_dataframe]
+            )
+
+            ### Set timer to re-run the program every N-minutes
+            timer = gr.Timer(value=600, active=self.timer_enabled)
+            timer.tick(
+                run_with_logging,
+                inputs=[log_data],
+                outputs=[log_data, logs, opportunities_dataframe],
             )
 
         ui.launch(inbrowser=True)
