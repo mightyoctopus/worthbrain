@@ -89,7 +89,7 @@ class ScrapedDeal:
         return f"Title: {self.title}\n\nDetails: {self.details.strip()}\n\nFeatures: {self.features.strip()}\n\nURL: {self.url}"
 
     @classmethod
-    def fetch(cls, show_progress: bool = False):
+    def fetch(cls, show_progress: bool = False) -> List["ScrapedDeal"]: #forward reference
         """
         Retrieve all deals from the selected RSS feeds
         """
