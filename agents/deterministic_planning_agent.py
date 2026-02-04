@@ -25,7 +25,7 @@ class DeterministicPlanningAgent(Agent):
 
     def run(self, deal: Deal) -> Opportunity:
         """
-        Run the workflow for a particular deal and convert it into Opportunity object
+        Run the workflow for a particular deal and convert the deal model into Opportunity model
         :param deal: the deal, summarized from an RSS scrape
         :return: an Opportunity pydantic model, containing the estimated value and discount
         """
