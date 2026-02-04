@@ -39,7 +39,7 @@ class ScannerAgent(Agent):
         """
         self.log("Scanner Agent is fetching available deals...")
         urls = [opp.deal.url for opp in memory]
-        deals = ScrapedDeal.fetch()
+        deals: List[ScrapedDeal] = ScrapedDeal.fetch()
         results = [deal for deal in deals if deal.url not in urls]
         self.log(f"Scanner Agent received {len(results)} new fresh deals!")
         return results
