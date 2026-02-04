@@ -220,8 +220,8 @@ __marimo__/
 .idea/
 
 ### Exclude the large pickle files (Download them via a G-Drive link at day2.ipynb)
-train.pkl
-test.pkl
+prototypes/train.pkl
+prototypes/test.pkl
 
 /products_vectorstore/
 
