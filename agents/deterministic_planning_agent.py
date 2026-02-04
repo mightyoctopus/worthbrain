@@ -40,7 +40,7 @@ class DeterministicPlanningAgent(Agent):
         """
         Run the full workflow:
         1. Use the ScannerAgent to find deals from RSS feeds
-        2. Use the EnsembleAgent to estimate them
+        2. Use the EnsembleAgent to estimate the true worth (price)
         3. Use the MessagingAgent to send a notification of deals
         :param memory: a list of URLs that have been surfaced in the past
         :return: an Opportunity if one was surfaced, otherwise None
