@@ -35,7 +35,7 @@ class ScannerAgent(Agent):
     def fetch_deals(self, memory) -> List[ScrapedDeal]:
         """
         Look up deals published on RSS feeds.
-        Return any new deals that are not already in the memory provided
+        Return any brand-new deals that are not already in the memory provided
         """
         self.log("Scanner Agent is fetching available deals...")
         urls = [opp.deal.url for opp in memory]
