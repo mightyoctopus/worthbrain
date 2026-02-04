@@ -31,3 +31,4 @@ class Agent:
         color_code = self.BG_BLACK + self.color
         message = f"[{self.name}] {message}"
         logging.info(color_code + message + self.RESET)
+
