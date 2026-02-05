@@ -53,7 +53,7 @@ Each sub-agent has a clearly defined responsibility and communicates through str
 
 
 ### Runtime Data Flow
-
+![WorthBrain Execution Flow](docs/WorthBrain%20-%20Execution%20Flow.jpg)
 WorthBrain uses a producer–consumer concurrency model with queues to separate computation from UI updates.
 
 The execution flow is as follows:
