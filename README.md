@@ -22,7 +22,7 @@ The core objective of WorthBrain is to:
 
 
 ## System Architecture
-![WorthBrain Architecture](docs/worthbrain-architecture.png)
+![WorthBrain Architecture](docs/WorthBrain.jpg)
 
 At the highest level, WorthBrain is structured into two major layers:
 
