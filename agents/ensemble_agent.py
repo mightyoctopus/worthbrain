@@ -20,7 +20,7 @@ class EnsembleAgent(Agent):
         And loading the weights of the Ensemble
 
         :param collection:
-            A vector database collection used by the FrontierAgent for
+            A vector database collection used by the FrontierAgent with Chromadb for
             semantic retrieval and similarity search.
         """
         self.log("Initializing Ensemble Agent...")
