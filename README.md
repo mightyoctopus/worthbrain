@@ -52,8 +52,8 @@ The orchestration layer contains the Agent Framework and its sub-agents. The UI 
 Each sub-agent has a clearly defined responsibility and communicates through structured objects (Deal, Opportunity, etc.)
 
 
-### Runtime Data Flow
-![WorthBrain Execution Flow](docs/WorthBrain%20-%20Execution%20Flow.jpg)
+### Runtime Flow
+![WorthBrain Execution Flow](docs/WorthBrain%20-%20Execution%20Flow%20.jpg)
 WorthBrain uses a producer–consumer concurrency model with queues to separate computation from UI updates.
 
 The execution flow is as follows:
