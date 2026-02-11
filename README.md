@@ -2,6 +2,11 @@
 
 Autonomous Multi-Agent Deal Intelligence System (Deal Hunter)
 
+## Demo Video
+Click the link below to watch a 4-minute video for the system demo:
+https://drive.google.com/file/d/1HCyEESXbye_O19zVpYNPEQuyCv4hVQXy/view?usp=drive_link 
+
+
 ## Overview
 
 WorthBrain is a multi-agent system designed to automatically discover, evaluate, and surface high value online deals (with a lot of discount). 
