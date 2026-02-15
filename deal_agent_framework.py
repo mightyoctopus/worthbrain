@@ -54,7 +54,7 @@ def init_logging():
 
 
 class DealAgentFramework:
-    DB = "products_vectorstore"
+    DB = os.getenv("PRODUCTION_DB", "products_vectorstore")
     MEMORY_FILENAME = "memory.json"
 
     def __init__(self):
